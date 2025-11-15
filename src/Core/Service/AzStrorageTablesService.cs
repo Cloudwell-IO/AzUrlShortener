@@ -71,6 +71,8 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
                 {
                     item.CreatedDate = item.Timestamp!.Value.UtcDateTime.ToString("yyyy-MM-dd") ?? string.Empty;
                 }
+                // Decode RowKey for UI/use
+                item.RowKey = TableKeyEncoding.DecodeKey(item.RowKey);
                 lstShortUrl.Add(item);
             }
         }
@@ -86,7 +88,10 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
         //newShortUrl.SchedulesPropertyRaw = JsonSerializer.Serialize<List<Schedule>>(newShortUrl.Schedules);
 
         TableClient tblUrls = GetUrlsTable();
+        var originalRowKey = newShortUrl.RowKey;
+        newShortUrl.RowKey = TableKeyEncoding.EncodeKey(newShortUrl.RowKey);
         var response = await tblUrls.UpsertEntityAsync<ShortUrlEntity>(newShortUrl);
+        newShortUrl.RowKey = originalRowKey;
 
         var temp = response.Content;
         return newShortUrl;
@@ -113,7 +118,8 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
         var tblUrls = GetUrlsTable();
         ShortUrlEntity shortUrlEntity = null;
 
-        var result = tblUrls.QueryAsync<ShortUrlEntity>(e => e.RowKey == vanity);
+        var encoded = TableKeyEncoding.EncodeKey(vanity);
+        var result = tblUrls.QueryAsync<ShortUrlEntity>(e => e.RowKey == encoded);
         await foreach (var entity in result)
         {
             shortUrlEntity = entity;
@@ -125,7 +131,7 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
     public async Task<ShortUrlEntity> GetShortUrlEntity(ShortUrlEntity row)
     {
         TableClient tblUrls = GetUrlsTable();
-        var response = await tblUrls.GetEntityAsync<ShortUrlEntity>(row.PartitionKey, row.RowKey);
+        var response = await tblUrls.GetEntityAsync<ShortUrlEntity>(row.PartitionKey, TableKeyEncoding.EncodeKey(row.RowKey));
         ShortUrlEntity eShortUrl = response.Value as ShortUrlEntity;
         return eShortUrl;
     }
@@ -141,7 +147,7 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
     public async Task<bool> IfShortUrlEntityExist(ShortUrlEntity row)
     {
         TableClient tblUrls = GetUrlsTable();
-        var result = await tblUrls.GetEntityIfExistsAsync<ShortUrlEntity>(row.PartitionKey, row.RowKey);
+        var result = await tblUrls.GetEntityIfExistsAsync<ShortUrlEntity>(row.PartitionKey, TableKeyEncoding.EncodeKey(row.RowKey));
         return result.HasValue;
     }
 
@@ -170,7 +176,8 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
         }
         else
         {
-            queryResult = tblStats.QueryAsync<ClickStatsEntity>(e => e.PartitionKey == vanity);
+            var encVanity = TableKeyEncoding.EncodeKey(vanity);
+            queryResult = tblStats.QueryAsync<ClickStatsEntity>(e => e.PartitionKey == encVanity);
         }
 
         await foreach (var emp in queryResult.AsPages())
@@ -195,7 +202,10 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
 
     public async Task SaveClickStatsEntity(ClickStatsEntity newStats)
     {
+        var originalPk = newStats.PartitionKey;
+        newStats.PartitionKey = TableKeyEncoding.EncodeKey(newStats.PartitionKey);
         var result = await GetStatsTable().UpsertEntityAsync(newStats);
+        newStats.PartitionKey = originalPk;
     }
 
 
