@@ -80,6 +80,81 @@ footer a {
     padding: 5px;
 }
 
+/* Data grid container responsive adjustments */
+.grid-wrap {
+    height: 400px;
+    overflow-x: auto;
+}
+
+@media (max-width: 600px) {
+    .grid-wrap {
+        height: auto; /* allow grid to grow naturally on mobile */
+    }
+}
+
+/* Improve tap targets a bit on mobile */
+@media (max-width: 600px) {
+    #grdUrls fluent-button,
+    #grdArchivedUrls fluent-button {
+        margin: 0 3px;
+    }
+}
+
+/* Hide non-essential columns on small screens
+   UrlManager columns:
+   1 Copy | 2 Schedules | 3 Vanity | 4 Title | 5 Url | 6 Clicks | 7 Created | 8 Actions
+   ArchivedUrls columns:
+   1 Copy | 2 Schedules | 3 Vanity | 4 Title | 5 Url | 6 Clicks | 7 Created | 8 Reactivate
+   We hide 2,5,6,7 on narrow screens unless the container has .show-more. */
+@media (max-width: 600px) {
+    /* UrlManager grid */
+    .grid-wrap:not(.show-more) #grdUrls thead tr th:nth-child(2),
+    .grid-wrap:not(.show-more) #grdUrls tbody tr td:nth-child(2),
+    .grid-wrap:not(.show-more) #grdUrls thead tr th:nth-child(5),
+    .grid-wrap:not(.show-more) #grdUrls tbody tr td:nth-child(5),
+    .grid-wrap:not(.show-more) #grdUrls thead tr th:nth-child(6),
+    .grid-wrap:not(.show-more) #grdUrls tbody tr td:nth-child(6),
+    .grid-wrap:not(.show-more) #grdUrls thead tr th:nth-child(7),
+    .grid-wrap:not(.show-more) #grdUrls tbody tr td:nth-child(7) {
+        display: none !important;
+    }
+
+    /* Archived grid */
+    .grid-wrap:not(.show-more) #grdArchivedUrls thead tr th:nth-child(2),
+    .grid-wrap:not(.show-more) #grdArchivedUrls tbody tr td:nth-child(2),
+    .grid-wrap:not(.show-more) #grdArchivedUrls thead tr th:nth-child(5),
+    .grid-wrap:not(.show-more) #grdArchivedUrls tbody tr td:nth-child(5),
+    .grid-wrap:not(.show-more) #grdArchivedUrls thead tr th:nth-child(6),
+    .grid-wrap:not(.show-more) #grdArchivedUrls tbody tr td:nth-child(6),
+    .grid-wrap:not(.show-more) #grdArchivedUrls thead tr th:nth-child(7),
+    .grid-wrap:not(.show-more) #grdArchivedUrls tbody tr td:nth-child(7) {
+        display: none !important;
+    }
+
+    /* Allow long vanity text to wrap if needed */
+    #grdUrls a[appearance="hypertext"],
+    #grdArchivedUrls a[appearance="hypertext"] {
+        word-break: break-word;
+        white-space: normal;
+    }
+}
+
+/* Action buttons layout: default horizontal; stack on mobile for easier tapping */
+.row-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+@media (max-width: 600px) {
+    .row-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .row-actions fluent-button {
+        width: 100%;
+    }
+}
+
 
 #blazor-error-ui {
     background: lightyellow;

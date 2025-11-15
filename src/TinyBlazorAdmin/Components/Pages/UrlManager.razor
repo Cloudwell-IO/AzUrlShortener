@@ -17,15 +17,18 @@
 <h1>Urls Manager</h1>
 <h3>Create, Edit, Archive your URLs</h3>
 
-<FluentButton OnClick="@(CreateShortUrl)" Appearance="Appearance.Accent" IconStart="@(new Icons.Regular.Size16.Add())">Add New Url</FluentButton>
+<FluentStack Orientation="Orientation.Horizontal" Gap="8">
+    <FluentButton OnClick="@(CreateShortUrl)" Appearance="Appearance.Accent" IconStart="@(new Icons.Regular.Size16.Add())">Add New Url</FluentButton>
+    <FluentSwitch @bind-Checked="showMoreColumns">Show details</FluentSwitch>
+</FluentStack>
 
-<div style="height: 400px; overflow-x:auto; display:flex;">
+<div class="grid-wrap @(showMoreColumns ? "show-more" : string.Empty)">
     <FluentDataGrid Id="grdUrls" 
                     Items="@filteredUrlList"
                     ResizableColumns=true
                     AllowSorting=true
                     Pagination="@pagination"
-                    RowSize="DataGridRowSize.Medium"
+                    RowSize="DataGridRowSize.Small"
                     ShowHover=true>
         <ChildContent>
             <TemplateColumn Width="70px" Sortable="false">
@@ -60,8 +63,10 @@
             </TemplateColumn>
             <PropertyColumn Title="Created" Property="@(c => c!.CreatedDate)" Sortable="true" />
             <TemplateColumn Width="100px" Sortable="false">
-                <FluentButton OnClick="@(() => EditShortUrl(context))" IconEnd="@(new Icons.Regular.Size16.Edit())" Title="Edit" />
-                <FluentButton OnClick="@(async () => await ArchiveShortUrl(context))" IconEnd="@(new Icons.Regular.Size16.Archive())" Title="Archive" />
+                <div class="row-actions">
+                    <FluentButton OnClick="@(() => EditShortUrl(context))" IconEnd="@(new Icons.Regular.Size16.Edit())" Title="Edit" />
+                    <FluentButton OnClick="@(async () => await ArchiveShortUrl(context))" IconEnd="@(new Icons.Regular.Size16.Archive())" Title="Archive" />
+                </div>
             </TemplateColumn>
         </ChildContent>
         <EmptyContent>
@@ -84,6 +89,7 @@
     IQueryable<ShortUrlEntity>? filteredUrlList => urlList?.Where(x => x.RowKey.Contains(vanityFilter, StringComparison.CurrentCultureIgnoreCase) && x.Title.Contains(titleFilter, StringComparison.CurrentCultureIgnoreCase) );
 
     PaginationState pagination = new PaginationState { ItemsPerPage = 20 };
+    bool showMoreColumns = false;
     ShortUrlRequest shortUrlRequest;
     ShortUrlEntity editedUrl;
     public List<ShortUrlEntity> gridData { get; set; }
