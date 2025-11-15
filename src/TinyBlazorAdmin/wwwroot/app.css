@@ -1,5 +1,9 @@
 @import '/_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css';
 
+:root {
+    --accent-fill-rest: #0b5475; /* New value for the variable */
+}
+
 body {
     --body-font: "Segoe UI Variable", "Segoe UI", sans-serif;
     font-family: var(--body-font);
@@ -33,11 +37,15 @@ body {
     width: 100dvw;
 }
 
+header {
+    color: white;
+}
+
 footer {
     display: grid;
     grid-template-columns: 10px auto auto 10px;
-    background: var(--neutral-layer-4);
-    color: var(--neutral-foreground-rest);
+    background: #0b5475;
+    color: white;
     align-items: center;
     padding: 10px 10px;
 }
