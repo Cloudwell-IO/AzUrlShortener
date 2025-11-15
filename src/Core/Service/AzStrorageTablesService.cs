@@ -163,6 +163,14 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
         return await SaveShortUrlEntity(originalUrl);
     }
 
+    public async Task<ShortUrlEntity> ReactivateShortUrlEntity(ShortUrlEntity urlEntity)
+    {
+        ShortUrlEntity originalUrl = await GetShortUrlEntity(urlEntity);
+        originalUrl.IsArchived = false;
+
+        return await SaveShortUrlEntity(originalUrl);
+    }
+
 
 
     public async Task<List<ClickStatsEntity>> GetAllStatsByVanity(string vanity, string startDate, string endDate)

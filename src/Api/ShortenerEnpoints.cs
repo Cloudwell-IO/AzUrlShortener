@@ -37,6 +37,10 @@ public static class ShortenerEnpoints
             .WithDescription("Archive a Url")
             .WithDisplayName("Url Archive");
 
+        endpoints.MapPost("/UrlReactivate", UrlReactivate)
+            .WithDescription("Reactivate a Url")
+            .WithDisplayName("Url Reactivate");
+
         endpoints.MapPost("/UrlClickStatsByDay", UrlClickStatsByDay)
             .WithDescription("Provide Click Statistics by Day")
             .WithDisplayName("Url Click Statistics By Day");
@@ -106,6 +110,26 @@ public static class ShortenerEnpoints
         {
             var urlServices = new UrlServices(logger, new AzStrorageTablesService(tblClient));
             var result = await urlServices.Archive(shortUrl);
+            return TypedResults.Ok();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex.Message);
+            return TypedResults.InternalServerError<DetailedBadRequest>(new DetailedBadRequest { Message = ex.Message });
+        }
+    }
+
+    static private async Task<Results<
+                                    Ok,
+                                    InternalServerError<DetailedBadRequest>>>
+                                    UrlReactivate(ShortUrlEntity shortUrl,
+                                                TableServiceClient tblClient,
+                                                ILogger logger)
+    {
+        try
+        {
+            var urlServices = new UrlServices(logger, new AzStrorageTablesService(tblClient));
+            var result = await urlServices.Reactivate(shortUrl);
             return TypedResults.Ok();
         }
         catch (Exception ex)

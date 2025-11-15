@@ -59,6 +59,21 @@ public class UrlManagerClient(HttpClient httpClient)
 		return false;
 	}
 
+	public async Task<bool> UrlReactivate(ShortUrlEntity shortUrl)
+	{
+		try{
+			using var response = await httpClient.PostAsJsonAsync("/api/UrlReactivate", shortUrl);
+			if(response.IsSuccessStatusCode){
+				return true;
+			}
+		}
+		catch(Exception ex){
+			Console.WriteLine(ex.Message);
+		}
+		
+		return false;
+	}
+
 	public async Task<ShortUrlEntity?> UrlUpdate(ShortUrlEntity shortUrl)
 	{
 		try

@@ -22,6 +22,13 @@ public class UrlServices
 		ShortUrlEntity result = await _stgHelper.ArchiveShortUrlEntity(input);
 		return result;
 	}
+
+	public async Task<ShortUrlEntity> Reactivate(ShortUrlEntity input)
+	{
+		ShortUrlEntity result = await _stgHelper.ReactivateShortUrlEntity(input);
+		return result;
+	}
+
 	public async Task<string> Redirect(string? shortUrl)
 	{
 		string redirectUrl = "https://azure.com";
