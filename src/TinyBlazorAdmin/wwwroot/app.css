@@ -38,6 +38,7 @@ body {
 }
 
 header {
+    background: #0b5475;
     color: white;
 }
 
@@ -46,8 +47,12 @@ footer {
     grid-template-columns: 10px auto auto 10px;
     background: #0b5475;
     color: white;
-    align-items: center;
+    justify-content: center;
     padding: 10px 10px;
+}
+
+footer a {
+    color: white;
 }
 
     footer .link1 {
