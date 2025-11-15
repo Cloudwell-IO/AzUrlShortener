@@ -90,6 +90,12 @@ namespace Cloud5mins.ShortenerTools.Core.Domain
 
         private void Initialize(string longUrl, string endUrl, string title, Schedule[] schedules)
         {
+            // Validate endUrl is not null or empty
+            if (string.IsNullOrWhiteSpace(endUrl))
+            {
+                throw new ArgumentException("Short URL (endUrl) cannot be null or empty", nameof(endUrl));
+            }
+
             // Use first segment before '/' or first char if no slash
             var firstSegment = endUrl.Contains('/') ? endUrl.Split('/')[0] : endUrl;
             PartitionKey = string.IsNullOrEmpty(firstSegment) ? "_" : firstSegment.Substring(0, 1);
