@@ -123,6 +123,8 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
         await foreach (var entity in result)
         {
             shortUrlEntity = entity;
+            // Decode RowKey for use in the application layer
+            shortUrlEntity.RowKey = TableKeyEncoding.DecodeKey(shortUrlEntity.RowKey);
             break;
         }
         return shortUrlEntity;
@@ -133,6 +135,8 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
         TableClient tblUrls = GetUrlsTable();
         var response = await tblUrls.GetEntityAsync<ShortUrlEntity>(row.PartitionKey, TableKeyEncoding.EncodeKey(row.RowKey));
         ShortUrlEntity eShortUrl = response.Value as ShortUrlEntity;
+        // Decode RowKey for use in the application layer
+        eShortUrl.RowKey = TableKeyEncoding.DecodeKey(eShortUrl.RowKey);
         return eShortUrl;
     }
 
