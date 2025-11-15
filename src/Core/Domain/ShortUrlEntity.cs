@@ -92,7 +92,7 @@ namespace Cloud5mins.ShortenerTools.Core.Domain
         {
             // Use first segment before '/' or first char if no slash
             var firstSegment = endUrl.Contains('/') ? endUrl.Split('/')[0] : endUrl;
-            PartitionKey = string.IsNullOrEmpty(firstSegment) ? "_" : firstSegment.Substring(0, Math.Min(1, firstSegment.Length));
+            PartitionKey = string.IsNullOrEmpty(firstSegment) ? "_" : firstSegment.Substring(0, 1);
             RowKey = endUrl;
             Url = longUrl;
             Title = title;
