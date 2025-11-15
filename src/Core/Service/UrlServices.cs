@@ -94,6 +94,31 @@ public class UrlServices
 		return result;
 	}
 
+	public async Task<ListResponse> ListArchived(string host)
+	{
+		_logger.LogInformation($"Starting UrlListArchived...");
+
+		var result = new ListResponse();
+		string userId = string.Empty;
+
+		try
+		{
+			result.UrlList = await _stgHelper.GetAllShortUrlEntities();
+			result.UrlList = result.UrlList.Where(p => (p.IsArchived ?? false)).ToList();
+			foreach (ShortUrlEntity url in result.UrlList)
+			{
+				url.ShortUrl = Utility.GetShortUrl(host, url.RowKey);
+			}
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "An unexpected error was encountered.");
+			throw;
+		}
+
+		return result;
+	}
+
 	public async Task<ShortResponse> Create(ShortRequest input, string host)
 	{
 		ShortResponse result;

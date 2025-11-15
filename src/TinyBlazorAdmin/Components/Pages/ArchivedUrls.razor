@@ -93,9 +93,7 @@
     {
         try
         {
-            var allUrls = await urlManager.GetUrls();
-            // Filter to show only archived URLs
-            urlList = allUrls?.Where(u => u.IsArchived ?? false).AsQueryable();
+            urlList = await urlManager.GetArchivedUrls();
         }
         catch (Exception ex)
         {

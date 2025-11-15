@@ -24,6 +24,23 @@ public class UrlManagerClient(HttpClient httpClient)
 		return urlList;
     }
 
+	public async Task<IQueryable<ShortUrlEntity>?> GetArchivedUrls()
+    {
+		IQueryable<ShortUrlEntity> urlList = null;
+		try{
+			using var response = await httpClient.GetAsync("/api/UrlListArchived");
+			if(response.IsSuccessStatusCode){
+				var urls = await response.Content.ReadFromJsonAsync<ListResponse>();
+				urlList = urls!.UrlList.AsQueryable<ShortUrlEntity>();
+			}
+		}
+		catch(Exception ex){
+			Console.WriteLine(ex.Message);
+		}
+        
+		return urlList;
+    }
+
 	public async Task<(bool , string)> UrlCreate(ShortRequest url)
 	{
 		(bool , string) result = (false, "Failed");

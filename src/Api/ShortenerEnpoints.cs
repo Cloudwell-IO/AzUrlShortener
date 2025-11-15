@@ -22,6 +22,10 @@ public static class ShortenerEnpoints
             .WithDescription("List all Urls")
             .WithDisplayName("Url List");
 
+        endpoints.MapGet("/UrlListArchived", UrlListArchived)
+            .WithDescription("List all archived Urls")
+            .WithDisplayName("Url List Archived");
+
 
         // POSTS
 
@@ -198,6 +202,27 @@ public static class ShortenerEnpoints
             var urlServices = new UrlServices(logger, new AzStrorageTablesService(tblClient));
             var host = GetHost(context);
             ListResponse Urls = await urlServices.List(host);
+            return TypedResults.Ok(Urls);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An unexpected error was encountered.");
+            return TypedResults.InternalServerError<DetailedBadRequest>(new DetailedBadRequest { Message = ex.Message });
+        }
+    }
+
+    static private async Task<Results<
+                                Ok<ListResponse>,
+                                InternalServerError<DetailedBadRequest>>>
+                                UrlListArchived(TableServiceClient tblClient,
+                                        HttpContext context,
+                                        ILogger logger)
+    {
+        try
+        {
+            var urlServices = new UrlServices(logger, new AzStrorageTablesService(tblClient));
+            var host = GetHost(context);
+            ListResponse Urls = await urlServices.ListArchived(host);
             return TypedResults.Ok(Urls);
         }
         catch (Exception ex)
