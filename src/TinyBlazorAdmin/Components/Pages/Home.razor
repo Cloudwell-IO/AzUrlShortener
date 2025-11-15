@@ -1,186 +1,183 @@
 ﻿@page "/"
 
 <PageTitle>Cloudwell Go - Admin Center</PageTitle>
-<h1 class="cwgo-title">Cloudwell Go Admin Center</h1>
 
-<div class="cwgo-layout">
+<div class="cwgo-container">
 
-    <!-- HERO CARD -->
-    <FluentCard Class="cwgo-card cwgo-hero">
-        <div class="cwgo-hero-content">
-            <div class="cwgo-hero-side">
-                <div class="cwgo-hero-icon">
-                    Go
-                </div>
-                <h2 class="cwgo-hero-heading">
-                    Welcome to<br />Cloudwell Go
-                </h2>
+    <!-- HERO -->
+    <FluentCard Class="cwgo-hero-card">
+        <FluentStack Horizontal="true" Gap="16" VerticalAlignment="VerticalAlignment.Center">
+            <div class="cwgo-hero-icon">
+                <span>Go</span>
             </div>
 
-            <div class="cwgo-hero-body">
-                <p>
-                    Cloudwell Go is Cloudwell’s internal vanity URL service, enabling you to create
-                    short, memorable links for events, documentation, product pages, marketing
-                    campaigns, and other internal or external resources.
+            <FluentStack Gap="8" VerticalAlignment="VerticalAlignment.Center">
+                <h1 class="cwgo-hero-title">Cloudwell Go Admin Center</h1>
+                <p class="cwgo-hero-text">
+                    Cloudwell Go is Cloudwell’s internal vanity URL service for creating short,
+                    memorable links to events, documentation, product pages, marketing campaigns,
+                    and other work-related resources.
+                </p>
+                <p class="cwgo-hero-subtext">
+                    Use this portal to create, update, and manage short links under
+                    <b>go.cloudwell.io</b>, such as
+                    <code>go.cloudwell.io/demo</code> or
+                    <code>go.cloudwell.io/getcalendaroverlay</code>.
                 </p>
 
-                <p>
-                    Use this admin portal to create, update, and manage short links under
-                    <b>go.cloudwell.io</b>, such as <code>go.cloudwell.io/Demo</code> or
-                    <code>go.cloudwell.io/GetCalendarOverlay</code>.
-                </p>
-            </div>
-        </div>
+                <FluentStack Horizontal="true" Gap="8">
+                    <!-- wire this up to your URL manager route -->
+                    <FluentButton Appearance="Appearance.Accent" Size="Medium">
+                        Create a new link
+                    </FluentButton>
+                    <FluentButton Appearance="Appearance.Outline" Size="Medium">
+                        View all links
+                    </FluentButton>
+                </FluentStack>
+            </FluentStack>
+        </FluentStack>
     </FluentCard>
 
-    <!-- USAGE GUIDELINES -->
-    <FluentCard Class="cwgo-card cwgo-side-card">
-        <h3 class="cwgo-section-heading">Usage guidelines</h3>
-        <p>
-            Cloudwell Go is provided for <b>Cloudwell business purposes only</b>. When creating or
-            updating links, please:
-        </p>
-        <ul class="cwgo-list">
-            <li>Use links only for professional, work-related content.</li>
-            <li>Do not create links that point to inappropriate, offensive, or non-business sites.</li>
-            <li>Follow all Cloudwell security, privacy, and information-handling policies.</li>
-            <li>
-                Choose clear, descriptive slugs that reflect the destination
-                (for example, <code>/m365dc</code>, <code>/overlay-demo</code>).
-            </li>
-        </ul>
-    </FluentCard>
+    <!-- LOWER GRID -->
+    <div class="cwgo-lower-grid">
 
-    <!-- DISCLAIMER -->
-    <FluentCard Class="cwgo-card cwgo-side-card cwgo-disclaimer">
-        <h3 class="cwgo-section-heading">Disclaimer</h3>
-        <p>
-            Cloudwell may review, update, or remove Cloudwell Go links at any time to maintain
-            accuracy, security, and compliance. Links and their destinations may be modified,
-            redirected, or disabled <b>without prior notice</b>.
-        </p>
-        <p>
-            By using this tool, you agree to manage links responsibly and in accordance with
-            Cloudwell policies and guidelines.
-        </p>
-    </FluentCard>
+        <FluentCard Class="cwgo-info-card">
+            <h2 class="cwgo-section-title">Usage guidelines</h2>
+            <p>
+                Cloudwell Go is provided for <b>Cloudwell business purposes only</b>.
+                When creating or updating links, please:
+            </p>
+            <ul class="cwgo-list">
+                <li>Use links only for professional, work-related content.</li>
+                <li>Do not create links that point to inappropriate, offensive, or non-business sites.</li>
+                <li>Follow all Cloudwell security, privacy, and information-handling policies.</li>
+                <li>
+                    Choose clear, descriptive slugs that reflect the destination
+                    (for example, <code>/m365dc</code>, <code>/overlay-demo</code>).
+                </li>
+            </ul>
+        </FluentCard>
 
+        <FluentCard Class="cwgo-info-card cwgo-disclaimer-card">
+            <h2 class="cwgo-section-title">Disclaimer</h2>
+            <p>
+                Cloudwell may review, update, or remove Cloudwell Go links at any time to maintain
+                accuracy, security, and compliance. Links and their destinations may be modified,
+                redirected, or disabled <b>without prior notice</b>.
+            </p>
+            <p>
+                By using this tool, you agree to manage links responsibly and in accordance with
+                Cloudwell policies and guidelines, and to use Cloudwell Go only for professional purposes.
+            </p>
+            <p class="cwgo-note">
+                Note: If a link is adjusted or retired, the owning team is responsible for communicating
+                any changes to their audiences.
+            </p>
+        </FluentCard>
+
+    </div>
 </div>
 
 <style>
-    .cwgo-title {
-        margin: 1.25rem 0 1rem;
-        font-size: 1.8rem;
-        font-weight: 600;
-        color: var(--neutral-foreground-rest);
+    .cwgo-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 16px 24px 32px;
+        box-sizing: border-box;
     }
 
-    /* main layout: hero left, two cards stacked on the right */
-    .cwgo-layout {
-        display: grid;
-        grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.4fr);
-        grid-template-rows: auto auto;
-        gap: 16px;
-        align-items: stretch;
-    }
-
-    .cwgo-card {
-        padding: 1.25rem 1.5rem;
-        border-radius: 12px;
-    }
-
-    .cwgo-hero {
-        grid-row: 1 / span 2;
-        background: linear-gradient(135deg, #0b5475 0%, #0f6ea0 50%, #138bbf 100%);
-        color: #ffffff;
-        border: none;
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
-    }
-
-    .cwgo-hero-content {
-        display: flex;
-        gap: 24px;
-        align-items: flex-start;
-    }
-
-    .cwgo-hero-side {
-        flex: 0 0 180px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        align-items: flex-start;
+    .cwgo-hero-card {
+        margin-bottom: 20px;
+        padding: 20px 24px;
+        border-left: 4px solid #0b5475;
+        background-color: var(--neutral-layer-1);
     }
 
     .cwgo-hero-icon {
         width: 56px;
         height: 56px;
-        border-radius: 16px;
-        background: rgba(255, 255, 255, 0.16);
+        border-radius: 50%;
+        background-color: #0b5475;
         display: flex;
         align-items: center;
         justify-content: center;
+        color: #ffffff;
         font-weight: 700;
         font-size: 1.1rem;
-        letter-spacing: 0.06em;
+        text-transform: uppercase;
     }
 
-    .cwgo-hero-heading {
+    .cwgo-hero-title {
         margin: 0;
-        font-size: 1.35rem;
+        font-size: 1.6rem;
         font-weight: 600;
-        line-height: 1.2;
+        color: var(--neutral-foreground-rest);
     }
 
-    .cwgo-hero-body {
-        flex: 1;
-        font-size: 0.95rem;
+    .cwgo-hero-text {
+        margin: 4px 0;
+        font-size: 0.98rem;
         line-height: 1.6;
     }
 
-    .cwgo-hero-body p {
-        margin: 0 0 0.75rem;
+    .cwgo-hero-subtext {
+        margin: 0 0 8px;
+        font-size: 0.92rem;
+        line-height: 1.5;
+        color: var(--neutral-foreground-hint, #555);
     }
 
-    .cwgo-side-card {
+    .cwgo-lower-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
+        gap: 16px;
+    }
+
+    .cwgo-info-card {
+        padding: 16px 20px;
         background-color: var(--neutral-layer-1);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
     }
 
-    .cwgo-section-heading {
+    .cwgo-section-title {
         margin-top: 0;
-        margin-bottom: 0.5rem;
+        margin-bottom: 6px;
         font-size: 1.1rem;
         font-weight: 600;
         color: var(--neutral-foreground-rest);
     }
 
     .cwgo-list {
-        margin: 0.5rem 0 0;
+        margin: 6px 0 0;
         padding-left: 1.25rem;
         font-size: 0.95rem;
+        line-height: 1.6;
     }
 
-    .cwgo-disclaimer {
-        border-left: 4px solid var(--accent-fill-rest);
+    .cwgo-disclaimer-card {
+        border-left: 3px solid var(--accent-fill-rest);
+    }
+
+    .cwgo-note {
+        margin-top: 8px;
+        font-size: 0.9rem;
+        color: var(--neutral-foreground-hint, #666);
     }
 
     code {
         font-family: Consolas, "SF Mono", Menlo, Monaco, "Courier New", monospace;
-        padding: 0.08rem 0.35rem;
-        border-radius: 4px;
+        padding: 0.05rem 0.3rem;
+        border-radius: 3px;
         background-color: var(--neutral-layer-2);
         font-size: 0.85em;
     }
 
-    /* Simple responsive tweak for narrow widths */
-    @@media (max-width: 1024px) {
-        .cwgo-layout {
+    @@media (max-width: 960px) {
+        .cwgo-lower-grid {
             grid-template-columns: minmax(0, 1fr);
-            grid-template-rows: auto auto auto;
         }
 
-        .cwgo-hero {
-            grid-row: auto;
+        .cwgo-container {
+            padding-inline: 16px;
         }
     }
 </style>
