@@ -87,7 +87,7 @@ public class UrlServices
 		return result;
 	}
 
-	public async Task<ShortResponse> Create(ShortRequest input, string host)
+	public async Task<ShortResponse> Create(ShortRequest input, string host, string? createdByDisplayName)
 	{
 		ShortResponse result;
 
@@ -125,6 +125,12 @@ public class UrlServices
 			{
 				var generatedVanity = await Utility.GetValidEndUrl(vanity, _stgHelper);
 				newRow = new ShortUrlEntity(longUrl, generatedVanity, title, input.Schedules);
+			}
+
+			// Set creator display name if provided
+			if (!string.IsNullOrWhiteSpace(createdByDisplayName))
+			{
+				newRow.CreatedByDisplayName = createdByDisplayName.Trim();
 			}
 
 			await _stgHelper.SaveShortUrlEntity(newRow);

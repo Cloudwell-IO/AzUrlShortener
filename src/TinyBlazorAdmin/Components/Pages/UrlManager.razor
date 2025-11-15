@@ -59,6 +59,7 @@
                 </FluentStack>
             </TemplateColumn>
             <PropertyColumn Title="Created" Property="@(c => c!.CreatedDate)" Sortable="true" />
+            <PropertyColumn Title="Created By" Property="@(c => c!.CreatedByDisplayName)" Sortable="true" />
             <TemplateColumn Width="100px" Sortable="false">
                 <FluentButton OnClick="@(() => EditShortUrl(context))" IconEnd="@(new Icons.Regular.Size16.Edit())" Title="Edit" />
                 <FluentButton OnClick="@(async () => await ArchiveShortUrl(context))" IconEnd="@(new Icons.Regular.Size16.Archive())" Title="Archive" />
@@ -84,9 +85,9 @@
     IQueryable<ShortUrlEntity>? filteredUrlList => urlList?.Where(x => x.RowKey.Contains(vanityFilter, StringComparison.CurrentCultureIgnoreCase) && x.Title.Contains(titleFilter, StringComparison.CurrentCultureIgnoreCase) );
 
     PaginationState pagination = new PaginationState { ItemsPerPage = 20 };
-    ShortUrlRequest shortUrlRequest;
-    ShortUrlEntity editedUrl;
-    public List<ShortUrlEntity> gridData { get; set; }
+    ShortUrlRequest? shortUrlRequest;
+    ShortUrlEntity? editedUrl;
+    public List<ShortUrlEntity>? gridData { get; set; }
 
     GridSort<ShortUrlEntity> sortByClicks = GridSort<ShortUrlEntity>.ByDescending(p => p.Clicks);
     GridSort<ShortUrlEntity> sortBySchedules = GridSort<ShortUrlEntity>.ByDescending(p => p.Schedules.Count);
@@ -156,7 +157,7 @@
         }
     }
 
-    [Inject] public IJSRuntime JsRuntime { get; set; }
+    [Inject] public IJSRuntime? JsRuntime { get; set; }
     public async Task CopyToClipboardAsync(string url)
     {
         await JSRuntime.InvokeVoidAsync("clipboardCopy.copyText", url);

@@ -71,7 +71,8 @@ public static class ShortenerEnpoints
         {
             var urlServices = new UrlServices(logger, new AzStrorageTablesService(tblClient));
             var host = GetHost(context);
-            ShortResponse result = await urlServices.Create(request, host);
+            var displayName = GetDisplayName(context);
+            ShortResponse result = await urlServices.Create(request, host, displayName);
             return TypedResults.Created($"/api/UrlCreate/{result.ShortUrl}", result);
         }
         catch (ShortenerToolException ex)
@@ -188,6 +189,20 @@ public static class ShortenerEnpoints
         string? customDomain = Environment.GetEnvironmentVariable("CustomDomain");
         var host = string.IsNullOrEmpty(customDomain) ? context.Request.Host.Value : customDomain;
         return host ?? string.Empty;
+    }
+
+    private static string GetDisplayName(HttpContext context)
+    {
+        var user = context.User;
+        if (user?.Identity?.IsAuthenticated ?? false)
+        {
+            return user.FindFirst("name")?.Value
+                ?? user.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value
+                ?? user.FindFirst("preferred_username")?.Value
+                ?? user.Identity!.Name
+                ?? string.Empty;
+        }
+        return string.Empty;
     }
 
 

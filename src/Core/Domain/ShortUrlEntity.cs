@@ -67,6 +67,8 @@ namespace Cloud5mins.ShortenerTools.Core.Domain
 
         public string CreatedDate { get; set; }
 
+        public string CreatedByDisplayName { get; set; }
+
 
 
         public ShortUrlEntity() { }
