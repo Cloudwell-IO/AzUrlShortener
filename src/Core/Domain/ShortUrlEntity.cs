@@ -67,6 +67,8 @@ namespace Cloud5mins.ShortenerTools.Core.Domain
 
         public string CreatedDate { get; set; }
 
+        public string CreatedByDisplayName { get; set; }
+
 
 
         public ShortUrlEntity() { }
@@ -88,7 +90,9 @@ namespace Cloud5mins.ShortenerTools.Core.Domain
 
         private void Initialize(string longUrl, string endUrl, string title, Schedule[] schedules)
         {
-            PartitionKey = endUrl.First().ToString();
+            // Use first segment before '/' or first char if no slash
+            var firstSegment = endUrl.Contains('/') ? endUrl.Split('/')[0] : endUrl;
+            PartitionKey = string.IsNullOrEmpty(firstSegment) ? "_" : firstSegment.Substring(0, Math.Min(1, firstSegment.Length));
             RowKey = endUrl;
             Url = longUrl;
             Title = title;
