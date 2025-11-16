@@ -1,10 +1,11 @@
 ﻿@rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
 
 <div class="navmenu">
     <input type="checkbox" title="Menu expand/collapse toggle" id="navmenu-toggle" class="navmenu-icon" />
     <label for="navmenu-toggle" class="navmenu-icon"><FluentIcon Value="@(new Icons.Regular.Size20.Navigation())" Color="Color.Fill" /></label>
     <nav class="sitenav" aria-labelledby="main-menu" onclick="document.getElementById('navmenu-toggle').click();">
-        <FluentNavMenu Id="main-menu" Collapsible="true" Width="250" Title="Navigation menu" @bind-Expanded="expanded">
+        <FluentNavMenu Id="main-menu" Collapsible="true" Width="250" Title="Navigation menu" Expanded="@expanded" ExpandedChanged="OnExpandedChanged">
             <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())" IconColor="Color.Accent">Home</FluentNavLink>
             <FluentNavLink Href="urlmanager" Icon="@(new Icons.Regular.Size20.AppsListDetail())" IconColor="Color.Accent">URL Manager</FluentNavLink>
             <FluentNavLink Href="archivedurls" Icon="@(new Icons.Regular.Size20.Archive())" IconColor="Color.Accent">Archived URLs</FluentNavLink>
@@ -17,6 +18,27 @@
 
 @code {
     private bool expanded = true;
+    private const string NavMenuExpandedKey = "navmenu-expanded";
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Load the saved state from localStorage
+            var savedState = await JSRuntime.InvokeAsync<bool?>("localStorageHelper.getItem", NavMenuExpandedKey);
+            if (savedState.HasValue)
+            {
+                expanded = savedState.Value;
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task OnExpandedChanged(bool newValue)
+    {
+        expanded = newValue;
+        // Save the state to localStorage
+        await JSRuntime.InvokeVoidAsync("localStorageHelper.setItem", NavMenuExpandedKey, newValue);
+    }
 }
 

@@ -16,7 +16,7 @@
 <h3>View and reactivate archived URLs</h3>
 
 <FluentStack Orientation="Orientation.Horizontal" Gap="8">
-    <FluentSwitch @bind-Checked="showMoreColumns">Show details</FluentSwitch>
+    <FluentSwitch Checked="@showMoreColumns" CheckedChanged="OnShowDetailsChanged">Show details</FluentSwitch>
 </FluentStack>
 
 <div class="grid-wrap @(showMoreColumns ? "show-more" : string.Empty)">
@@ -110,6 +110,7 @@
     bool showMoreColumns = false;
     bool hideDeleteDialog = true;
     ShortUrlEntity? urlToDelete = null;
+    private const string ShowDetailsKey = "archivedurls-show-details";
 
     GridSort<ShortUrlEntity> sortByClicks = GridSort<ShortUrlEntity>.ByDescending(p => p.Clicks);
     GridSort<ShortUrlEntity> sortBySchedules = GridSort<ShortUrlEntity>.ByDescending(p => p.Schedules.Count);
@@ -118,6 +119,12 @@
     protected override async Task OnInitializedAsync()
     {
         await RefreshGrid();
+        // Load saved show details state
+        var savedState = await JSRuntime.InvokeAsync<bool?>("localStorageHelper.getItem", ShowDetailsKey);
+        if (savedState.HasValue)
+        {
+            showMoreColumns = savedState.Value;
+        }
     }
 
     private async Task RefreshGrid()
@@ -130,6 +137,12 @@
         {
             Console.WriteLine(ex.ToString());
         }
+    }
+
+    private async Task OnShowDetailsChanged(bool newValue)
+    {
+        showMoreColumns = newValue;
+        await JSRuntime.InvokeVoidAsync("localStorageHelper.setItem", ShowDetailsKey, newValue);
     }
 
     private async Task UpdateUIList()
