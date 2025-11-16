@@ -34,10 +34,9 @@
                     StateHasChanged();
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"Error loading nav menu state: {ex.Message}");
-                // Continue with default state
+                // Continue with default state - localStorage not available or error occurred
             }
         }
     }
@@ -50,9 +49,9 @@
             // Save the state to localStorage
             await JSRuntime.InvokeVoidAsync("localStorageHelper.setItem", NavMenuExpandedKey, newValue);
         }
-        catch (Exception ex)
+        catch
         {
-            Console.WriteLine($"Error saving nav menu state: {ex.Message}");
+            // Ignore localStorage errors - state will not persist but app will continue
         }
     }
 }
