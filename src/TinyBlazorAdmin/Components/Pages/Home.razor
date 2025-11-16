@@ -7,11 +7,11 @@
 
     <!-- HERO -->
     <FluentCard Class="cwgo-hero-card">
-        <FluentStack Horizontal="false" Gap="16" VerticalAlignment="VerticalAlignment.Center" Class="cwgo-hero-stack">
+        <FluentStack Orientation="Orientation.Horizontal" Gap="16" VerticalAlignment="VerticalAlignment.Center" Class="cwgo-hero-stack">
             <div class="cwgo-hero-icon">
                 <span>Go</span>
             </div>
-            <FluentStack Gap="8" VerticalAlignment="VerticalAlignment.Center">
+            <FluentStack Gap="8" VerticalAlignment="VerticalAlignment.Center" Class="cwgo-hero-content">
                 <p class="cwgo-hero-text">
                     Cloudwell Go is Cloudwell's internal vanity URL service for creating short,
                     memorable links to events, documentation, product pages, marketing campaigns,
@@ -84,12 +84,19 @@
 
     .cwgo-hero-stack {
         flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .cwgo-hero-content {
+        flex: 1;
+        min-width: 0;
     }
 
     .cwgo-hero-icon {
         width: 56px;
         height: 56px;
         min-width: 56px;
+        flex-shrink: 0;
         border-radius: 50%;
         background-color: #0b5475;
         display: flex;
@@ -194,20 +201,31 @@
 
         .cwgo-hero-stack {
             flex-direction: column;
+            gap: 12px;
             align-items: center;
-            text-align: center;
         }
 
         .cwgo-hero-icon {
-            width: 48px;
-            height: 48px;
-            min-width: 48px;
+            width: 52px;
+            height: 52px;
+            min-width: 52px;
             font-size: 1rem;
         }
 
-        .cwgo-hero-text,
-        .cwgo-hero-subtext {
+        .cwgo-hero-content {
+            width: 100%;
+        }
+
+        .cwgo-hero-text {
             font-size: 0.9rem;
+            line-height: 1.55;
+            margin: 0 0 8px 0;
+        }
+
+        .cwgo-hero-subtext {
+            font-size: 0.88rem;
+            line-height: 1.5;
+            margin: 0;
         }
 
         .cwgo-info-card {
@@ -219,7 +237,7 @@
         }
 
         .cwgo-list {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             padding-left: 1rem;
         }
 

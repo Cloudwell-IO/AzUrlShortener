@@ -28,11 +28,63 @@
 
 <script>
     window.clipboardCopy = {
-        copyText: function(text) {
-            navigator.clipboard.writeText(text)
-            .catch(function (error) {
-                alert(error);
-            });
+        copyText: async function(text) {
+            // Try modern clipboard API first (requires secure context)
+            if (navigator.clipboard && window.isSecureContext) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    return true;
+                } catch (err) {
+                    console.warn('Clipboard API failed, falling back to textarea method:', err);
+                }
+            }
+            
+            // Fallback for mobile devices and older browsers
+            try {
+                // Create a temporary textarea
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                
+                // Make it invisible and outside viewport
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                textArea.style.opacity = '0';
+                textArea.setAttribute('readonly', '');
+                
+                document.body.appendChild(textArea);
+                
+                // For iOS, we need to set contentEditable
+                if (navigator.userAgent.match(/ipad|iphone/i)) {
+                    textArea.contentEditable = 'true';
+                    textArea.readOnly = false;
+                    
+                    const range = document.createRange();
+                    range.selectNodeContents(textArea);
+                    
+                    const selection = window.getSelection();
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                    textArea.setSelectionRange(0, 999999);
+                } else {
+                    textArea.select();
+                    textArea.setSelectionRange(0, 999999);
+                }
+                
+                // Execute copy command
+                const successful = document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                if (!successful) {
+                    throw new Error('Copy command failed');
+                }
+                
+                return true;
+            } catch (err) {
+                console.error('All copy methods failed:', err);
+                alert('Unable to copy to clipboard. Error: ' + err.message);
+                return false;
+            }
         }
     };
 </script>
