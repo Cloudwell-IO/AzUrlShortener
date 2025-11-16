@@ -108,12 +108,20 @@
     {
         if (firstRender)
         {
-            // Load saved show details state
-            var savedState = await JSRuntime.InvokeAsync<bool?>("localStorageHelper.getItem", ShowDetailsKey);
-            if (savedState.HasValue)
+            try
             {
-                showMoreColumns = savedState.Value;
-                StateHasChanged();
+                // Load saved show details state
+                var savedState = await JSRuntime.InvokeAsync<bool?>("localStorageHelper.getItem", ShowDetailsKey);
+                if (savedState.HasValue)
+                {
+                    showMoreColumns = savedState.Value;
+                    StateHasChanged();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading show details state: {ex.Message}");
+                // Continue with default state
             }
         }
     }
@@ -133,7 +141,14 @@
     private async Task OnShowDetailsChanged(bool newValue)
     {
         showMoreColumns = newValue;
-        await JSRuntime.InvokeVoidAsync("localStorageHelper.setItem", ShowDetailsKey, newValue);
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("localStorageHelper.setItem", ShowDetailsKey, newValue);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving show details state: {ex.Message}");
+        }
     }
 
     private async Task UpdateUIList()
