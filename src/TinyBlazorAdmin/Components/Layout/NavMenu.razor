@@ -1,17 +1,17 @@
 ﻿@rendermode InteractiveServer
 @inject IJSRuntime JSRuntime
 
-<div class="navmenu">
+<div class="navmenu @(expanded ? "expanded" : "collapsed")">
     <input type="checkbox" title="Menu expand/collapse toggle" id="navmenu-toggle" class="navmenu-icon" />
     <label for="navmenu-toggle" class="navmenu-icon"><FluentIcon Value="@(new Icons.Regular.Size20.Navigation())" Color="Color.Fill" /></label>
     <nav class="sitenav" aria-labelledby="main-menu" onclick="document.getElementById('navmenu-toggle').click();">
         <FluentNavMenu Id="main-menu" Collapsible="true" Width="250" Title="Navigation menu" Expanded="@expanded" ExpandedChanged="OnExpandedChanged">
-            <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())" IconColor="Color.Accent">Home</FluentNavLink>
-            <FluentNavLink Href="urlmanager" Icon="@(new Icons.Regular.Size20.AppsListDetail())" IconColor="Color.Accent">URL Manager</FluentNavLink>
-            <FluentNavLink Href="archivedurls" Icon="@(new Icons.Regular.Size20.Archive())" IconColor="Color.Accent">Archived URLs</FluentNavLink>
-            <FluentNavLink Href="/statistics" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.ChartMultiple())" IconColor="Color.Accent">Statistics</FluentNavLink>
-            <FluentNavLink Href="/settings" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.TextBulletListSquareSettings())" IconColor="Color.Accent">Settings</FluentNavLink>
-            <FluentNavLink Href="/help" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.QuestionCircle())" IconColor="Color.Accent">Help</FluentNavLink>
+            <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())" IconColor="Color.Accent" CustomColor="var(--neutral-layer-2, #f3f3f3)">Home</FluentNavLink>
+            <FluentNavLink Href="urlmanager" Icon="@(new Icons.Regular.Size20.AppsListDetail())" IconColor="Color.Accent" CustomColor="var(--neutral-layer-2, #f3f3f3)">URL Manager</FluentNavLink>
+            <FluentNavLink Href="archivedurls" Icon="@(new Icons.Regular.Size20.Archive())" IconColor="Color.Accent" CustomColor="var(--neutral-layer-2, #f3f3f3)">Archived URLs</FluentNavLink>
+            <FluentNavLink Href="/statistics" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.ChartMultiple())" IconColor="Color.Accent" CustomColor="var(--neutral-layer-2, #f3f3f3)">Statistics</FluentNavLink>
+            <FluentNavLink Href="/settings" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.TextBulletListSquareSettings())" IconColor="Color.Accent" CustomColor="var(--neutral-layer-2, #f3f3f3)">Settings</FluentNavLink>
+            <FluentNavLink Href="/help" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.QuestionCircle())" IconColor="Color.Accent" CustomColor="var(--neutral-layer-2, #f3f3f3)">Help</FluentNavLink>
         </FluentNavMenu>
     </nav>
 </div>

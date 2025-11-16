@@ -20,6 +20,16 @@ body {
     background: #f3f2f1;
 }
 
+/* Desktop nav widths */
+.navmenu {
+    width: 250px;            /* expanded width matches FluentNavMenu Width */
+    flex: 0 0 auto;          /* prevent flex from stretching */
+}
+
+.navmenu.collapsed {
+    width: 48px;             /* collapsed target width */
+}
+
 .main {
     min-height: calc(100dvh - 86px);
     color: var(--neutral-foreground-rest);
