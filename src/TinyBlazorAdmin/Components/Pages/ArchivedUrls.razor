@@ -25,12 +25,12 @@
                     ShowHover=true>
         <ChildContent>
             <TemplateColumn Width="70px" Sortable="false">
-                <FluentButton OnClick="@(async () => await CopyToClipboardAsync(context!.ShortUrl))" IconEnd="@(new Icons.Regular.Size16.Copy())" Title="Copy" />
+                <FluentButton Title="Copy" OnClick="@(async () => await CopyToClipboardAsync(context!.ShortUrl))" IconEnd="@(new Icons.Regular.Size16.Copy())" />
             </TemplateColumn>
-            <TemplateColumn Width="115px" Title="Schedule(s)" Sortable="true" SortBy="@sortBySchedules">
+            <TemplateColumn Width="115px" Title="Schedule(s)" Sortable="false" SortBy="@sortBySchedules">
                 @(context!.Schedules?.Count ?? 0)
             </TemplateColumn>
-            <TemplateColumn Title="Vanity" Width="150px" Sortable="true" SortBy="@sortByVanities" Filtered="!string.IsNullOrWhiteSpace(vanityFilter)"  >
+            <TemplateColumn Title="Vanity" Width="150px" Sortable="false" SortBy="@sortByVanities" Filtered="!string.IsNullOrWhiteSpace(vanityFilter)"  >
                 <ColumnOptions>
                     <div class="search-box">
                         <FluentSearch type="search" Autofocus=true @bind-Value=vanityFilter @oninput="HandleVanityFilter" @bind-Value:after="HandleClearVanityFilter" Placeholder="contains..." />
@@ -40,22 +40,22 @@
                     <FluentAnchor Href="@context!.ShortUrl" Target="_blank" Appearance="Appearance.Hypertext">@context!.RowKey</FluentAnchor>
                 </ChildContent>
             </TemplateColumn>
-            <PropertyColumn Title="Title" Property="@(c => c!.Title)" Sortable="true"  Filtered="!string.IsNullOrWhiteSpace(titleFilter)" >
+            <PropertyColumn Title="Title" Property="@(c => c!.Title)" Sortable="false"  Filtered="!string.IsNullOrWhiteSpace(titleFilter)" >
                 <ColumnOptions>
                     <div class="search-box">
                         <FluentSearch type="search" Autofocus=true @bind-Value=titleFilter @oninput="HandleTitleFilter" @bind-Value:after="HandleClearTitleFilter" Placeholder="contains..." />
                     </div>
                 </ColumnOptions>
             </PropertyColumn>
-            <PropertyColumn Title="Url" Property="@(c => c!.Url)" Sortable="true" />
-            <TemplateColumn Title="Clicks" Width="110px" Align="Align.End" Sortable="true" SortBy="@sortByClicks">
+            <PropertyColumn Title="Url" Property="@(c => c!.Url)" Sortable="false" />
+            <TemplateColumn Title="Clicks" Width="110px" Align="Align.End" Sortable="false" SortBy="@sortByClicks">
                 <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center">
                     @context.Clicks
                     <FluentButton OnClick="@(() => NavigateToStats(context.RowKey))" IconEnd="@(new Icons.Regular.Size16.ChartMultiple())" />
                 </FluentStack>
             </TemplateColumn>
-            <PropertyColumn Title="Created" Property="@(c => c!.CreatedDate)" Sortable="true" />
-            <TemplateColumn Width="140px" Sortable="false">
+            <PropertyColumn Title="Created" Property="@(c => c!.CreatedDate)" Sortable="false" />
+            <TemplateColumn Title="Actions" Width="140px" Sortable="false">
                 <div class="row-actions">
                     <FluentButton OnClick="@(async () => await ReactivateShortUrl(context))" IconEnd="@(new Icons.Regular.Size16.ArrowUndo())" Title="Reactivate" />
                     <FluentButton OnClick="@(() => ShowDeleteConfirmation(context))" IconEnd="@(new Icons.Regular.Size16.Delete())" Title="Delete" Appearance="Appearance.Accent" />

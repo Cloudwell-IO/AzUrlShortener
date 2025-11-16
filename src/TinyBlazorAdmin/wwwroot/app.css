@@ -12,6 +12,14 @@ body {
     display: none;
 }
 
+.navmenu {
+    background: var(--neutral-layer-2, #f3f3f3);
+}
+
+.sitenav {
+    background: var(--neutral-layer-2, #f3f3f3);
+}
+
 .main {
     min-height: calc(100dvh - 86px);
     color: var(--neutral-foreground-rest);
@@ -97,6 +105,15 @@ footer a {
 @media (max-width: 600px) {
     .grid-wrap {
         height: auto; /* allow grid to grow naturally on mobile */
+        overflow-x: auto; /* enable horizontal scroll on small screens */
+        -webkit-overflow-scrolling: touch; /* smoother scrolling on iOS */
+    }
+
+    /* Make data grids wider than viewport so horizontal scroll appears */
+    .grid-wrap fluent-data-grid {
+        display: block;
+        min-width: 900px; /* ensure columns fit; adjust if needed */
+        width: max-content;
     }
 
     /* Improve tap targets on mobile */
