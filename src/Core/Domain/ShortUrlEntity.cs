@@ -2,16 +2,16 @@ using Azure;
 using Azure.Data.Tables;
 using System.Runtime.Serialization;
 using System.Text.Json;
-using Azure;
-using Azure.Data.Tables;
 
 
 namespace Cloud5mins.ShortenerTools.Core.Domain
 {
     public class ShortUrlEntity : ITableEntity
     {
-        public string Url { get; set; }
-        private string _activeUrl { get; set; }
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^https?://\S+$", ErrorMessage = "Url must start with 'http://' or 'https://' and be a valid absolute URL")]
+        public string Url { get; set; } = string.Empty;
+        private string _activeUrl { get; set; } = string.Empty;
 
         public string ActiveUrl
         {
@@ -24,16 +24,16 @@ namespace Cloud5mins.ShortenerTools.Core.Domain
         }
 
 
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
-        public string ShortUrl { get; set; }
+        public string ShortUrl { get; set; } = string.Empty;
 
         public int Clicks { get; set; }
 
-        public bool? IsArchived { get; set; }
-        public string SchedulesPropertyRaw { get; set; }
+        public bool? IsArchived { get; set; } = false;
+        public string SchedulesPropertyRaw { get; set; } = string.Empty;
 
-        private List<Schedule> _schedules { get; set; }
+        private List<Schedule> _schedules { get; set; } = new();
 
         //[IgnoreProperty]
         [IgnoreDataMember]
@@ -49,7 +49,8 @@ namespace Cloud5mins.ShortenerTools.Core.Domain
                     }
                     else
                     {
-                        _schedules = JsonSerializer.Deserialize<Schedule[]>(SchedulesPropertyRaw).ToList<Schedule>();
+                        var deserialized = JsonSerializer.Deserialize<Schedule[]>(SchedulesPropertyRaw) ?? Array.Empty<Schedule>();
+                        _schedules = deserialized.ToList();
                     }
                 }
                 return _schedules;
@@ -60,14 +61,14 @@ namespace Cloud5mins.ShortenerTools.Core.Domain
             }
         }
 
-        public string PartitionKey { get; set; }
-        public string RowKey { get; set; }
+        public string PartitionKey { get; set; } = string.Empty;
+        public string RowKey { get; set; } = string.Empty;
         public DateTimeOffset? Timestamp { get; set; }
         public ETag ETag { get; set; }
 
-        public string CreatedDate { get; set; }
+        public string CreatedDate { get; set; } = string.Empty;
 
-        public string CreatedByDisplayName { get; set; }
+        public string CreatedByDisplayName { get; set; } = string.Empty;
 
 
 
@@ -75,7 +76,7 @@ namespace Cloud5mins.ShortenerTools.Core.Domain
 
         public ShortUrlEntity(string longUrl, string endUrl)
         {
-            Initialize(longUrl, endUrl, string.Empty, null);
+            Initialize(longUrl, endUrl, string.Empty, Array.Empty<Schedule>());
         }
 
         public ShortUrlEntity(string longUrl, string endUrl, Schedule[] schedules)
@@ -154,12 +155,9 @@ namespace Cloud5mins.ShortenerTools.Core.Domain
 
         public bool Validate()
         {
-            //TODO: Add more validation
-            if (string.IsNullOrEmpty(Url))
-            {
-                return false;
-            }
-            return true;
+            if (string.IsNullOrWhiteSpace(Url)) return false;
+            if (!Uri.TryCreate(Url, UriKind.Absolute, out var uri)) return false;
+            return uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps;
         }
     }
 

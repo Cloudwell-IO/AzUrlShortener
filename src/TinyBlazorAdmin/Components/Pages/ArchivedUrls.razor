@@ -131,7 +131,6 @@
         StateHasChanged();
     }
 
-    [Inject] public IJSRuntime JsRuntime { get; set; }
     public async Task CopyToClipboardAsync(string url)
     {
         await JSRuntime.InvokeVoidAsync("clipboardCopy.copyText", url);

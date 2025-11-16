@@ -34,7 +34,7 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
         if (check.HasValue)
         {
             var result = await tblUrls.GetEntityAsync<NextId>("1", "KEY");
-            entity = result.Value as NextId;
+            entity = result.Value;
         }
         else
         {
@@ -116,7 +116,7 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
     public async Task<ShortUrlEntity?> GetShortUrlEntityByVanity(string vanity)
     {
         var tblUrls = GetUrlsTable();
-        ShortUrlEntity shortUrlEntity = null;
+        ShortUrlEntity? shortUrlEntity = null;
 
         var encoded = TableKeyEncoding.EncodeKey(vanity);
         var result = tblUrls.QueryAsync<ShortUrlEntity>(e => e.RowKey == encoded);
@@ -134,7 +134,7 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
     {
         TableClient tblUrls = GetUrlsTable();
         var response = await tblUrls.GetEntityAsync<ShortUrlEntity>(row.PartitionKey, TableKeyEncoding.EncodeKey(row.RowKey));
-        ShortUrlEntity eShortUrl = response.Value as ShortUrlEntity;
+        ShortUrlEntity eShortUrl = response.Value!;
         // Decode RowKey for use in the application layer
         eShortUrl.RowKey = TableKeyEncoding.DecodeKey(eShortUrl.RowKey);
         return eShortUrl;
@@ -143,7 +143,7 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
 
     public async Task<bool> IfShortUrlEntityExistByVanity(string vanity)
     {
-        ShortUrlEntity shortUrlEntity = await GetShortUrlEntityByVanity(vanity);
+        ShortUrlEntity? shortUrlEntity = await GetShortUrlEntityByVanity(vanity);
         return (shortUrlEntity != null);
     }
 
@@ -188,11 +188,14 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
 
 
 
-    public async Task<List<ClickStatsEntity>> GetAllStatsByVanity(string vanity, string startDate, string endDate)
+    public async Task<List<ClickStatsEntity>> GetAllStatsByVanity(string vanity, string? startDate = null, string? endDate = null)
     {
         var tblStats = GetStatsTable();
-        var sDate = DateOnly.ParseExact(startDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-        var eDate = DateOnly.ParseExact(endDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+        // Default date range: last 30 days if not provided
+        var now = DateTime.UtcNow;
+        var defaultStart = now.AddDays(-30);
+        var sDate = DateOnly.ParseExact(startDate ?? defaultStart.ToString("yyyy-MM-dd"), "yyyy-MM-dd", CultureInfo.InvariantCulture);
+        var eDate = DateOnly.ParseExact(endDate ?? now.ToString("yyyy-MM-dd"), "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
         var lstUrlStats = new List<ClickStatsEntity>();
         AsyncPageable<ClickStatsEntity> queryResult;

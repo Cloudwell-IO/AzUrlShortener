@@ -88,9 +88,7 @@
     IQueryable<ShortUrlEntity>? filteredUrlList => urlList?.Where(x => x.RowKey.Contains(vanityFilter, StringComparison.CurrentCultureIgnoreCase) && x.Title.Contains(titleFilter, StringComparison.CurrentCultureIgnoreCase) );
 
     PaginationState pagination = new PaginationState { ItemsPerPage = 20 };
-    ShortUrlRequest shortUrlRequest;
-    ShortUrlEntity editedUrl;
-    public List<ShortUrlEntity> gridData { get; set; }
+    ShortUrlRequest shortUrlRequest = new();
 
     GridSort<ShortUrlEntity> sortByClicks = GridSort<ShortUrlEntity>.ByDescending(p => p.Clicks);
     GridSort<ShortUrlEntity> sortBySchedules = GridSort<ShortUrlEntity>.ByDescending(p => p.Schedules.Count);
@@ -160,7 +158,6 @@
         }
     }
 
-    [Inject] public IJSRuntime JsRuntime { get; set; }
     public async Task CopyToClipboardAsync(string url)
     {
         await JSRuntime.InvokeVoidAsync("clipboardCopy.copyText", url);

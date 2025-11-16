@@ -65,7 +65,7 @@ public static class Utility
     }
 
 
-    public async static Task<UrlDetails> ExtractUrlsDataFromCSV(string fileFullName)
+    public static Task<UrlDetails> ExtractUrlsDataFromCSV(string fileFullName)
     {
         var data = new UrlDetails
         {
@@ -94,8 +94,8 @@ public static class Utility
                         {
                             data.NextId = new NextId
                             {
-                                PartitionKey = csv.GetField("PartitionKey"),
-                                RowKey = csv.GetField("RowKey"),
+                                PartitionKey = csv.GetField<string>("PartitionKey") ?? string.Empty,
+                                RowKey = csv.GetField<string>("RowKey") ?? string.Empty,
                                 Id = csv.GetField<int>("Id")
                             };
                         }
@@ -103,11 +103,11 @@ public static class Utility
                         {
                             var record = new ShortUrlEntity
                             {
-                                PartitionKey = csv.GetField("PartitionKey"),
-                                RowKey = csv.GetField("RowKey"),
+                                PartitionKey = csv.GetField<string>("PartitionKey") ?? string.Empty,
+                                RowKey = csv.GetField<string>("RowKey") ?? string.Empty,
                                 Clicks = csv.GetField<int?>("Clicks") ?? 0,
                                 Title = csv.GetField("Title") ?? String.Empty,
-                                Url = csv.GetField("Url"),
+                                Url = csv.GetField<string>("Url") ?? string.Empty,
                                 SchedulesPropertyRaw = csv.GetField("SchedulesPropertyRaw") ?? String.Empty,
                                 IsArchived = csv.GetField<bool?>("IsArchived") ?? false
                             };
@@ -117,11 +117,11 @@ public static class Utility
                 }
             }
         }
-        return data;
+        return Task.FromResult(data);
     }
 
 
-    public async static Task<List<ClickStatsEntity>> ExtractClickStatsFromCSV(string fileFullName)
+    public static Task<List<ClickStatsEntity>> ExtractClickStatsFromCSV(string fileFullName)
     {
         var lstClickStats = new List<ClickStatsEntity>();
 
@@ -141,6 +141,6 @@ public static class Utility
                 }
             }
         }
-        return lstClickStats;
+        return Task.FromResult(lstClickStats);
     }
 }

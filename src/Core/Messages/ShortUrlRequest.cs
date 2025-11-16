@@ -7,7 +7,7 @@ namespace Cloud5mins.ShortenerTools.Core.Messages
 {
     public class ShortUrlRequest
     {
-        private string _vanity;
+        private string _vanity = string.Empty;
 
         public string? Title { get; set; }
 
@@ -24,9 +24,10 @@ namespace Cloud5mins.ShortenerTools.Core.Messages
         }
 
         [Required]
-        public string Url { get; set; }
+        [RegularExpression(@"^https?://\S+$", ErrorMessage = "Url must start with 'http://' or 'https://' and be a valid absolute URL")]
+        public string Url { get; set; } = string.Empty;
 
-        private List<Schedule> _schedules;
+        private List<Schedule> _schedules = new();
 
         public List<Schedule> Schedules
         {
@@ -46,11 +47,9 @@ namespace Cloud5mins.ShortenerTools.Core.Messages
 
         public bool Validate()
         {
-            if (string.IsNullOrEmpty(Url))
-            {
-                return false;
-            }
-            return true;
+            if (string.IsNullOrWhiteSpace(Url)) return false;
+            if (!Uri.TryCreate(Url, UriKind.Absolute, out var uri)) return false;
+            return uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps;
         }
     }
 }
