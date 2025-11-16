@@ -15,17 +15,13 @@
 <h1>Archived Urls</h1>
 <h3>View and reactivate archived URLs</h3>
 
-<FluentStack Orientation="Orientation.Horizontal" Gap="8">
-    <FluentSwitch Checked="@showMoreColumns" CheckedChanged="OnShowDetailsChanged">Show details</FluentSwitch>
-</FluentStack>
-
-<div class="grid-wrap @(showMoreColumns ? "show-more" : string.Empty)">
+<div class="grid-wrap show-more">
     <FluentDataGrid Id="grdArchivedUrls" 
                     Items="@filteredUrlList"
                     ResizableColumns=true
                     AllowSorting=true
                     Pagination="@pagination"
-                    RowSize="DataGridRowSize.Small"
+                    RowSize="DataGridRowSize.Large"
                     ShowHover=true>
         <ChildContent>
             <TemplateColumn Width="70px" Sortable="false">
@@ -107,10 +103,8 @@
     IQueryable<ShortUrlEntity>? filteredUrlList => urlList?.Where(x => x.RowKey.Contains(vanityFilter, StringComparison.CurrentCultureIgnoreCase) && x.Title.Contains(titleFilter, StringComparison.CurrentCultureIgnoreCase) );
 
     PaginationState pagination = new PaginationState { ItemsPerPage = 20 };
-    bool showMoreColumns = false;
     bool hideDeleteDialog = true;
     ShortUrlEntity? urlToDelete = null;
-    private const string ShowDetailsKey = "archivedurls-show-details";
 
     GridSort<ShortUrlEntity> sortByClicks = GridSort<ShortUrlEntity>.ByDescending(p => p.Clicks);
     GridSort<ShortUrlEntity> sortBySchedules = GridSort<ShortUrlEntity>.ByDescending(p => p.Schedules.Count);
@@ -119,28 +113,6 @@
     protected override async Task OnInitializedAsync()
     {
         await RefreshGrid();
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            try
-            {
-                // Load saved show details state
-                var savedState = await JSRuntime.InvokeAsync<bool?>("localStorageHelper.getItem", ShowDetailsKey);
-                if (savedState.HasValue)
-                {
-                    showMoreColumns = savedState.Value;
-                    StateHasChanged();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading show details state: {ex.Message}");
-                // Continue with default state
-            }
-        }
     }
 
     private async Task RefreshGrid()
@@ -152,19 +124,6 @@
         catch (Exception ex)
         {
             Console.WriteLine(ex.ToString());
-        }
-    }
-
-    private async Task OnShowDetailsChanged(bool newValue)
-    {
-        showMoreColumns = newValue;
-        try
-        {
-            await JSRuntime.InvokeVoidAsync("localStorageHelper.setItem", ShowDetailsKey, newValue);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error saving show details state: {ex.Message}");
         }
     }
 
