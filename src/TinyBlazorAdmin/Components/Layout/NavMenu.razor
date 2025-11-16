@@ -6,12 +6,12 @@
     <label for="navmenu-toggle" class="navmenu-icon"><FluentIcon Value="@(new Icons.Regular.Size20.Navigation())" Color="Color.Fill" /></label>
     <nav class="sitenav" aria-labelledby="main-menu" onclick="document.getElementById('navmenu-toggle').click();">
         <FluentNavMenu Id="main-menu" Collapsible="true" Width="250" Title="Navigation menu" Expanded="@expanded" ExpandedChanged="OnExpandedChanged">
-            <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())" IconColor="Color.Accent" CustomColor="transparent">Home</FluentNavLink>
-            <FluentNavLink Href="urlmanager" Icon="@(new Icons.Regular.Size20.AppsListDetail())" IconColor="Color.Accent" CustomColor="transparent">URL Manager</FluentNavLink>
-            <FluentNavLink Href="archivedurls" Icon="@(new Icons.Regular.Size20.Archive())" IconColor="Color.Accent" CustomColor="transparent">Archived URLs</FluentNavLink>
-            <FluentNavLink Href="/statistics" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.ChartMultiple())" CustomColor="transparent">Statistics</FluentNavLink>
-            <FluentNavLink Href="/settings" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.TextBulletListSquareSettings())" CustomColor="transparent">Settings</FluentNavLink>
-            <FluentNavLink Href="/help" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.QuestionCircle())" CustomColor="transparent">Help</FluentNavLink>
+            <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())" IconColor="Color.Accent">Home</FluentNavLink>
+            <FluentNavLink Href="urlmanager" Icon="@(new Icons.Regular.Size20.AppsListDetail())" IconColor="Color.Accent">URL Manager</FluentNavLink>
+            <FluentNavLink Href="archivedurls" Icon="@(new Icons.Regular.Size20.Archive())" IconColor="Color.Accent">Archived URLs</FluentNavLink>
+            <FluentNavLink Href="/statistics" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.ChartMultiple())" IconColor="Color.Accent">Statistics</FluentNavLink>
+            <FluentNavLink Href="/settings" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.TextBulletListSquareSettings())" IconColor="Color.Accent">Settings</FluentNavLink>
+            <FluentNavLink Href="/help" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.QuestionCircle())" IconColor="Color.Accent">Help</FluentNavLink>
         </FluentNavMenu>
     </nav>
 </div>
