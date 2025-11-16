@@ -13,11 +13,11 @@ body {
 }
 
 .navmenu {
-    background: var(--neutral-layer-2, #f3f3f3);
+    background: #f3f2f1;
 }
 
 .sitenav {
-    background: var(--neutral-layer-2, #f3f3f3);
+    background: #f3f2f1;
 }
 
 .main {
