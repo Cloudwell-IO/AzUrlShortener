@@ -29,6 +29,12 @@ public class UrlServices
 		return result;
 	}
 
+	public async Task<bool> Delete(ShortUrlEntity input)
+	{
+		bool result = await _stgHelper.DeleteShortUrlEntity(input);
+		return result;
+	}
+
 	public async Task<string> Redirect(string? shortUrl)
 	{
 		string redirectUrl = "https://azure.com";

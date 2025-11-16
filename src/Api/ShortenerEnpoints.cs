@@ -45,6 +45,10 @@ public static class ShortenerEnpoints
             .WithDescription("Reactivate a Url")
             .WithDisplayName("Url Reactivate");
 
+        endpoints.MapPost("/UrlDelete", UrlDelete)
+            .WithDescription("Delete a Url")
+            .WithDisplayName("Url Delete");
+
         endpoints.MapPost("/UrlClickStatsByDay", UrlClickStatsByDay)
             .WithDescription("Provide Click Statistics by Day")
             .WithDisplayName("Url Click Statistics By Day");
@@ -135,6 +139,33 @@ public static class ShortenerEnpoints
             var urlServices = new UrlServices(logger, new AzStrorageTablesService(tblClient));
             var result = await urlServices.Reactivate(shortUrl);
             return TypedResults.Ok();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex.Message);
+            return TypedResults.InternalServerError<DetailedBadRequest>(new DetailedBadRequest { Message = ex.Message });
+        }
+    }
+
+    static private async Task<Results<
+                                    Ok,
+                                    InternalServerError<DetailedBadRequest>>>
+                                    UrlDelete(ShortUrlEntity shortUrl,
+                                                TableServiceClient tblClient,
+                                                ILogger logger)
+    {
+        try
+        {
+            var urlServices = new UrlServices(logger, new AzStrorageTablesService(tblClient));
+            var result = await urlServices.Delete(shortUrl);
+            if (result)
+            {
+                return TypedResults.Ok();
+            }
+            else
+            {
+                return TypedResults.InternalServerError<DetailedBadRequest>(new DetailedBadRequest { Message = "Failed to delete URL" });
+            }
         }
         catch (Exception ex)
         {

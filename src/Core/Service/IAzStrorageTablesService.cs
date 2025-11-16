@@ -14,6 +14,7 @@ public interface IAzStrorageTablesService
     Task<bool> IfShortUrlEntityExistByVanity(string vanity);
     Task<ShortUrlEntity> ArchiveShortUrlEntity(ShortUrlEntity urlEntity);
     Task<ShortUrlEntity> ReactivateShortUrlEntity(ShortUrlEntity urlEntity);
+    Task<bool> DeleteShortUrlEntity(ShortUrlEntity urlEntity);
     Task<List<ClickStatsEntity>> GetAllStatsByVanity(string vanity, string? startDate = null, string? endDate = null);
     Task SaveClickStatsEntity(ClickStatsEntity newStats);
     Task ImportUrlDataAsync(UrlDetails urlData);

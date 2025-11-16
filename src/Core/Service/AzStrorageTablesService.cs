@@ -171,6 +171,21 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
         return await SaveShortUrlEntity(originalUrl);
     }
 
+    public async Task<bool> DeleteShortUrlEntity(ShortUrlEntity urlEntity)
+    {
+        try
+        {
+            TableClient tblUrls = GetUrlsTable();
+            var encodedRowKey = TableKeyEncoding.EncodeKey(urlEntity.RowKey);
+            await tblUrls.DeleteEntityAsync(urlEntity.PartitionKey, encodedRowKey);
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
 
 
     public async Task<List<ClickStatsEntity>> GetAllStatsByVanity(string vanity, string startDate, string endDate)

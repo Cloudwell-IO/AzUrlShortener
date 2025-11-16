@@ -59,9 +59,10 @@
                 </FluentStack>
             </TemplateColumn>
             <PropertyColumn Title="Created" Property="@(c => c!.CreatedDate)" Sortable="true" />
-            <TemplateColumn Width="70px" Sortable="false">
+            <TemplateColumn Width="140px" Sortable="false">
                 <div class="row-actions">
                     <FluentButton OnClick="@(async () => await ReactivateShortUrl(context))" IconEnd="@(new Icons.Regular.Size16.ArrowUndo())" Title="Reactivate" />
+                    <FluentButton OnClick="@(() => ShowDeleteConfirmation(context))" IconEnd="@(new Icons.Regular.Size16.Delete())" Title="Delete" Appearance="Appearance.Accent" />
                 </div>
             </TemplateColumn>
         </ChildContent>
@@ -72,6 +73,27 @@
 </div>
 <FluentPaginator State="@pagination" />
 
+<FluentDialog @bind-Hidden="@hideDeleteDialog" Modal="true" TrapFocus="true" PreventScroll="true">
+    <FluentDialogHeader ShowDismiss="true">
+        <FluentStack VerticalAlignment="VerticalAlignment.Center">
+            <FluentIcon Value="@(new Icons.Regular.Size24.Warning())" Color="Color.Accent" />
+            <FluentLabel Typo="Typography.PaneHeader">Confirm Delete</FluentLabel>
+        </FluentStack>
+    </FluentDialogHeader>
+    <FluentDialogBody>
+        <p>Are you sure you want to permanently delete this short URL?</p>
+        @if (urlToDelete != null)
+        {
+            <p><strong>Vanity:</strong> @urlToDelete.RowKey</p>
+            <p><strong>Title:</strong> @urlToDelete.Title</p>
+        }
+        <p style="color: var(--accent-fill-rest); font-weight: bold;">This action cannot be undone.</p>
+    </FluentDialogBody>
+    <FluentDialogFooter>
+        <FluentButton Appearance="Appearance.Accent" OnClick="@(async () => await ConfirmDelete())">Delete</FluentButton>
+        <FluentButton Appearance="Appearance.Neutral" OnClick="@CancelDelete">Cancel</FluentButton>
+    </FluentDialogFooter>
+</FluentDialog>
 
 
 @code {
@@ -86,6 +108,8 @@
 
     PaginationState pagination = new PaginationState { ItemsPerPage = 20 };
     bool showMoreColumns = false;
+    bool hideDeleteDialog = true;
+    ShortUrlEntity? urlToDelete = null;
 
     GridSort<ShortUrlEntity> sortByClicks = GridSort<ShortUrlEntity>.ByDescending(p => p.Clicks);
     GridSort<ShortUrlEntity> sortBySchedules = GridSort<ShortUrlEntity>.ByDescending(p => p.Schedules.Count);
@@ -132,6 +156,37 @@
             await UpdateUIList();
             toastService.ShowSuccess("Short URL reactivated successfully");
         }
+    }
+
+    private void ShowDeleteConfirmation(ShortUrlEntity urlEntity)
+    {
+        urlToDelete = urlEntity;
+        hideDeleteDialog = false;
+    }
+
+    private void CancelDelete()
+    {
+        urlToDelete = null;
+        hideDeleteDialog = true;
+    }
+
+    private async Task ConfirmDelete()
+    {
+        if (urlToDelete != null)
+        {
+            var result = await urlManager.UrlDelete(urlToDelete);
+            if (result)
+            {
+                await UpdateUIList();
+                toastService.ShowSuccess("Short URL deleted permanently");
+            }
+            else
+            {
+                toastService.ShowError("Failed to delete short URL");
+            }
+        }
+        urlToDelete = null;
+        hideDeleteDialog = true;
     }
 
     private void HandleVanityFilter(ChangeEventArgs args)

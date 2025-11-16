@@ -28,62 +28,94 @@
 
 <script>
     window.clipboardCopy = {
-        copyText: async function(text) {
-            // Try modern clipboard API first (requires secure context)
-            if (navigator.clipboard && window.isSecureContext) {
-                try {
-                    await navigator.clipboard.writeText(text);
-                    return true;
-                } catch (err) {
-                    console.warn('Clipboard API failed, falling back to textarea method:', err);
-                }
+        copyText: function(text) {
+            // Try native Share API on mobile devices (best UX)
+            if (navigator.share && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                return navigator.share({
+                    title: 'Short URL',
+                    text: text,
+                    url: text
+                })
+                .then(() => true)
+                .catch((err) => {
+                    // User cancelled or share failed, try clipboard
+                    if (err.name === 'AbortError') {
+                        return this.copyToClipboard(text);
+                    }
+                    console.warn('Share API failed:', err);
+                    return this.copyToClipboard(text);
+                });
             }
             
-            // Fallback for mobile devices and older browsers
+            // Use clipboard for desktop or if share not available
+            return this.copyToClipboard(text);
+        },
+        
+        copyToClipboard: function(text) {
+            // Try modern clipboard API first (works on HTTPS and localhost)
+            if (navigator.clipboard && window.isSecureContext) {
+                return navigator.clipboard.writeText(text)
+                    .then(() => true)
+                    .catch((err) => {
+                        console.warn('Clipboard API failed:', err);
+                        return this.fallbackCopy(text);
+                    });
+            }
+            
+            // Use fallback for non-secure contexts
+            return this.fallbackCopy(text);
+        },
+        
+        fallbackCopy: function(text) {
+            // Create a temporary text area
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            
+            // Style to be invisible and off-screen
+            textArea.style.position = 'fixed';
+            textArea.style.top = '0';
+            textArea.style.left = '0';
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            textArea.style.padding = '0';
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            textArea.style.background = 'transparent';
+            textArea.style.opacity = '0';
+            
+            document.body.appendChild(textArea);
+            
             try {
-                // Create a temporary textarea
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
+                // Focus and select
+                textArea.focus();
+                textArea.select();
                 
-                // Make it invisible and outside viewport
-                textArea.style.position = 'fixed';
-                textArea.style.left = '-999999px';
-                textArea.style.top = '-999999px';
-                textArea.style.opacity = '0';
-                textArea.setAttribute('readonly', '');
-                
-                document.body.appendChild(textArea);
-                
-                // For iOS, we need to set contentEditable
-                if (navigator.userAgent.match(/ipad|iphone/i)) {
-                    textArea.contentEditable = 'true';
-                    textArea.readOnly = false;
-                    
+                // For iOS devices
+                if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
                     const range = document.createRange();
                     range.selectNodeContents(textArea);
-                    
                     const selection = window.getSelection();
                     selection.removeAllRanges();
                     selection.addRange(range);
                     textArea.setSelectionRange(0, 999999);
-                } else {
-                    textArea.select();
-                    textArea.setSelectionRange(0, 999999);
                 }
                 
-                // Execute copy command
+                // Try to copy
                 const successful = document.execCommand('copy');
-                document.body.removeChild(textArea);
                 
                 if (!successful) {
-                    throw new Error('Copy command failed');
+                    throw new Error('Copy command was unsuccessful');
                 }
                 
-                return true;
+                return Promise.resolve(true);
             } catch (err) {
-                console.error('All copy methods failed:', err);
-                alert('Unable to copy to clipboard. Error: ' + err.message);
-                return false;
+                console.error('Fallback copy failed:', err);
+                // Show user-friendly message
+                alert('Unable to copy. Please copy the link manually: ' + text);
+                return Promise.resolve(false);
+            } finally {
+                document.body.removeChild(textArea);
             }
         }
     };
