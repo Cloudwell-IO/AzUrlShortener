@@ -7,13 +7,13 @@
 
     <!-- HERO -->
     <FluentCard Class="cwgo-hero-card">
-        <FluentStack Horizontal="true" Gap="16" VerticalAlignment="VerticalAlignment.Center">
+        <FluentStack Horizontal="false" Gap="16" VerticalAlignment="VerticalAlignment.Center" Class="cwgo-hero-stack">
             <div class="cwgo-hero-icon">
                 <span>Go</span>
             </div>
             <FluentStack Gap="8" VerticalAlignment="VerticalAlignment.Center">
                 <p class="cwgo-hero-text">
-                    Cloudwell Go is Cloudwell’s internal vanity URL service for creating short,
+                    Cloudwell Go is Cloudwell's internal vanity URL service for creating short,
                     memorable links to events, documentation, product pages, marketing campaigns,
                     and other work-related resources.
                 </p>
@@ -82,9 +82,14 @@
         background-color: var(--neutral-layer-1);
     }
 
+    .cwgo-hero-stack {
+        flex-direction: row;
+    }
+
     .cwgo-hero-icon {
         width: 56px;
         height: 56px;
+        min-width: 56px;
         border-radius: 50%;
         background-color: #0b5475;
         display: flex;
@@ -100,6 +105,7 @@
         font-size: 1.6rem;
         font-weight: 600;
         color: var(--neutral-foreground-rest);
+        margin: 0 0 16px 0;
     }
 
     .cwgo-hero-text {
@@ -159,6 +165,7 @@
         font-size: 0.85em;
     }
 
+    /* Tablet breakpoint */
     @@media (max-width: 960px) {
         .cwgo-lower-grid {
             grid-template-columns: minmax(0, 1fr);
@@ -166,6 +173,63 @@
 
         .cwgo-container {
             padding-inline: 16px;
+        }
+    }
+
+    /* Mobile breakpoint */
+    @@media (max-width: 600px) {
+        .cwgo-container {
+            padding: 12px 16px 24px;
+        }
+
+        .cwgo-hero-title {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+
+        .cwgo-hero-card {
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .cwgo-hero-stack {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .cwgo-hero-icon {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            font-size: 1rem;
+        }
+
+        .cwgo-hero-text,
+        .cwgo-hero-subtext {
+            font-size: 0.9rem;
+        }
+
+        .cwgo-info-card {
+            padding: 14px 16px;
+        }
+
+        .cwgo-section-title {
+            font-size: 1rem;
+        }
+
+        .cwgo-list {
+            font-size: 0.9rem;
+            padding-left: 1rem;
+        }
+
+        .cwgo-list li {
+            margin-bottom: 8px;
+        }
+
+        code {
+            font-size: 0.8em;
+            word-break: break-word;
         }
     }
 </style>

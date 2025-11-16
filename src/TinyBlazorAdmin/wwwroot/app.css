@@ -86,27 +86,30 @@ footer a {
     overflow-x: auto;
 }
 
+/* Action buttons layout: default horizontal; stack on mobile for easier tapping */
+.row-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+/* Mobile-specific adjustments */
 @media (max-width: 600px) {
     .grid-wrap {
         height: auto; /* allow grid to grow naturally on mobile */
     }
-}
 
-/* Improve tap targets a bit on mobile */
-@media (max-width: 600px) {
+    /* Improve tap targets on mobile */
     #grdUrls fluent-button,
     #grdArchivedUrls fluent-button {
         margin: 0 3px;
     }
-}
 
-/* Hide non-essential columns on small screens
-   UrlManager columns:
-   1 Copy | 2 Schedules | 3 Vanity | 4 Title | 5 Url | 6 Clicks | 7 Created | 8 Actions
-   ArchivedUrls columns:
-   1 Copy | 2 Schedules | 3 Vanity | 4 Title | 5 Url | 6 Clicks | 7 Created | 8 Reactivate
-   We hide 2,5,6,7 on narrow screens unless the container has .show-more. */
-@media (max-width: 600px) {
+    /* Hide non-essential columns on small screens unless show-more is active
+       UrlManager columns: 1 Copy | 2 Schedules | 3 Vanity | 4 Title | 5 Url | 6 Clicks | 7 Created | 8 Actions
+       ArchivedUrls columns: 1 Copy | 2 Schedules | 3 Vanity | 4 Title | 5 Url | 6 Clicks | 7 Created | 8 Reactivate
+       We hide 2,5,6,7 on narrow screens unless the container has .show-more. */
+    
     /* UrlManager grid */
     .grid-wrap:not(.show-more) #grdUrls thead tr th:nth-child(2),
     .grid-wrap:not(.show-more) #grdUrls tbody tr td:nth-child(2),
@@ -116,7 +119,7 @@ footer a {
     .grid-wrap:not(.show-more) #grdUrls tbody tr td:nth-child(6),
     .grid-wrap:not(.show-more) #grdUrls thead tr th:nth-child(7),
     .grid-wrap:not(.show-more) #grdUrls tbody tr td:nth-child(7) {
-        display: none !important;
+        display: none;
     }
 
     /* Archived grid */
@@ -128,30 +131,69 @@ footer a {
     .grid-wrap:not(.show-more) #grdArchivedUrls tbody tr td:nth-child(6),
     .grid-wrap:not(.show-more) #grdArchivedUrls thead tr th:nth-child(7),
     .grid-wrap:not(.show-more) #grdArchivedUrls tbody tr td:nth-child(7) {
-        display: none !important;
+        display: none;
     }
 
-    /* Allow long vanity text to wrap if needed */
+    /* Allow long vanity text to wrap */
     #grdUrls a[appearance="hypertext"],
     #grdArchivedUrls a[appearance="hypertext"] {
         word-break: break-word;
         white-space: normal;
     }
-}
 
-/* Action buttons layout: default horizontal; stack on mobile for easier tapping */
-.row-actions {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-}
-@media (max-width: 600px) {
+    /* Stack action buttons vertically for easier tapping */
     .row-actions {
         flex-direction: column;
         align-items: stretch;
     }
     .row-actions fluent-button {
         width: 100%;
+    }
+
+    .main {
+        flex-direction: column !important;
+        row-gap: 0 !important;
+    }
+
+    nav.sitenav {
+        width: 100%;
+        height: 100%;
+    }
+
+    #main-menu {
+        width: 100% !important;
+    }
+
+    #main-menu > div:first-child:is(.expander) {
+        display: none;
+    }
+
+    .navmenu {
+        width: 100%;
+    }
+
+    #navmenu-toggle {
+        appearance: none;
+    }
+
+    #navmenu-toggle ~ nav {
+        display: none;
+    }
+
+    #navmenu-toggle:checked ~ nav {
+        display: block;
+    }
+
+    .navmenu-icon {
+        cursor: pointer;
+        z-index: 10;
+        display: block;
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        width: 20px;
+        height: 20px;
+        border: none;
     }
 }
 
@@ -221,52 +263,4 @@ footer a {
 
 code {
     color: #c02d76;
-}
-
-@media (max-width: 600px) {
-    .main {
-        flex-direction: column !important;
-        row-gap: 0 !important;
-    }
-
-    nav.sitenav {
-        width: 100%;
-        height: 100%;
-    }
-
-    #main-menu {
-        width: 100% !important;
-    }
-
-        #main-menu > div:first-child:is(.expander) {
-            display: none;
-        }
-
-    .navmenu {
-        width: 100%;
-    }
-
-    #navmenu-toggle {
-        appearance: none;
-    }
-
-        #navmenu-toggle ~ nav {
-            display: none;
-        }
-
-        #navmenu-toggle:checked ~ nav {
-            display: block;
-        }
-
-    .navmenu-icon {
-        cursor: pointer;
-        z-index: 10;
-        display: block;
-        position: absolute;
-        top: 15px;
-        right: 20px;
-        width: 20px;
-        height: 20px;
-        border: none;
-    }
 }
