@@ -119,11 +119,19 @@
     protected override async Task OnInitializedAsync()
     {
         await RefreshGrid();
-        // Load saved show details state
-        var savedState = await JSRuntime.InvokeAsync<bool?>("localStorageHelper.getItem", ShowDetailsKey);
-        if (savedState.HasValue)
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
         {
-            showMoreColumns = savedState.Value;
+            // Load saved show details state
+            var savedState = await JSRuntime.InvokeAsync<bool?>("localStorageHelper.getItem", ShowDetailsKey);
+            if (savedState.HasValue)
+            {
+                showMoreColumns = savedState.Value;
+                StateHasChanged();
+            }
         }
     }
 
