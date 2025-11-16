@@ -33,9 +33,6 @@
             <TemplateColumn Width="70px" Title="Copy" Sortable="false">
                 <FluentButton OnClick="@(async () => await CopyToClipboardAsync(context!.ShortUrl))" IconEnd="@(new Icons.Regular.Size16.Copy())" Title="Copy" />
             </TemplateColumn>
-            <TemplateColumn Width="115px" Title="Schedule(s)" Sortable="false" SortBy="@sortBySchedules">
-                @(context!.Schedules?.Count ?? 0)
-            </TemplateColumn>
             <TemplateColumn Title="Vanity" Width="150px" Sortable="false" SortBy="@sortByVanities" Filtered="!string.IsNullOrWhiteSpace(vanityFilter)"  >
                 <ColumnOptions>
                     <div class="search-box">
@@ -54,6 +51,9 @@
                 </ColumnOptions>
             </PropertyColumn>
             <PropertyColumn Title="Url" Property="@(c => c!.Url)" Sortable="false" />
+            <TemplateColumn Title="Schedule(s)" Sortable="false" SortBy="@sortBySchedules">
+                @(context!.Schedules?.Count ?? 0)
+            </TemplateColumn>
             <TemplateColumn Title="Clicks" Width="110px" Align="Align.End" Sortable="true" SortBy="@sortByClicks">
                 <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center">
                     @context.Clicks

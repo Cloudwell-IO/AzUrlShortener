@@ -3,6 +3,7 @@
 @using System.Net
 @using Cloud5mins.ShortenerTools.Core.Domain
 @using Cloud5mins.ShortenerTools.Core.Messages;
+@using Cloud5mins.ShortenerTools.TinyBlazorAdmin.Components.Dialogues
 @inject UrlManagerClient urlManager
 @inject IJSRuntime JSRuntime
 @inject IToastService toastService
@@ -24,12 +25,6 @@
                     RowSize="DataGridRowSize.Large"
                     ShowHover=true>
         <ChildContent>
-            <TemplateColumn Width="70px" Sortable="false">
-                <FluentButton Title="Copy" OnClick="@(async () => await CopyToClipboardAsync(context!.ShortUrl))" IconEnd="@(new Icons.Regular.Size16.Copy())" />
-            </TemplateColumn>
-            <TemplateColumn Width="115px" Title="Schedule(s)" Sortable="false" SortBy="@sortBySchedules">
-                @(context!.Schedules?.Count ?? 0)
-            </TemplateColumn>
             <TemplateColumn Title="Vanity" Width="150px" Sortable="false" SortBy="@sortByVanities" Filtered="!string.IsNullOrWhiteSpace(vanityFilter)"  >
                 <ColumnOptions>
                     <div class="search-box">
@@ -48,6 +43,9 @@
                 </ColumnOptions>
             </PropertyColumn>
             <PropertyColumn Title="Url" Property="@(c => c!.Url)" Sortable="false" />
+            <TemplateColumn Title="Schedule(s)" Sortable="false" SortBy="@sortBySchedules">
+                @(context!.Schedules?.Count ?? 0)
+            </TemplateColumn>
             <TemplateColumn Title="Clicks" Width="110px" Align="Align.End" Sortable="false" SortBy="@sortByClicks">
                 <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center">
                     @context.Clicks
